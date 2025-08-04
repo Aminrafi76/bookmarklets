@@ -1,1 +1,131 @@
-javascript:(function(){const d=ms=>new Promise(r=>setTimeout(r,ms));const o=document.createElement('div');o.style.position='fixed';o.style.top='0';o.style.left='0';o.style.width='100%';o.style.height='100%';o.style.backgroundColor='rgba(0,0,0,0.7)';o.style.display='flex';o.style.flexDirection='column';o.style.justifyContent='center';o.style.alignItems='center';o.style.zIndex='9999';o.style.color='white';o.style.fontSize='22px';o.style.backdropFilter='blur(3px)';o.style.fontFamily='Segoe UI, Tahoma, Geneva, Verdana, sans-serif';const s=document.createElement('div');s.style.border='6px solid rgba(255,255,255,0.3)';s.style.borderRadius='50%';s.style.borderTop='6px solid #00ffcc';s.style.width='60px';s.style.height='60px';s.style.animation='spin%201.2s%20linear%20infinite';o.appendChild(s);const%20st=document.createElement('style');st.textContent='@keyframes%20spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}';document.head.appendChild(st);const%20t=document.createElement('div');t.textContent='%D9%84%D8%B7%D9%81%D8%A7%D9%8B%20%D8%B5%D8%A8%D8%B1%20%DA%A9%D9%86%DB%8C%D8%AF...';t.style.marginTop='20px';o.appendChild(t);const%20progressContainer=document.createElement('div');progressContainer.style.marginTop='25px';progressContainer.style.width='300px';progressContainer.style.height='20px';progressContainer.style.backgroundColor='rgba(255,255,255,0.2)';progressContainer.style.borderRadius='10px';progressContainer.style.overflow='hidden';progressContainer.style.boxShadow='0%200%2010px%20rgba(0,255,204,0.5)%20inset';const%20progressBar=document.createElement('div');progressBar.style.width='0%';progressBar.style.height='100%';progressBar.style.backgroundColor='#00ffcc';progressBar.style.borderRadius='10px%200%200%2010px';progressBar.style.transition='width%200.3s%20ease';progressContainer.appendChild(progressBar);o.appendChild(progressContainer);const%20sig=document.createElement('div');sig.textContent='Create%20By%20AminRafiAkrami';sig.style.position='fixed';sig.style.bottom='40px';sig.style.left='10px';sig.style.color='black';sig.style.backgroundColor='rgba(255,255,255,0.7)';sig.style.padding='3px%207px';sig.style.borderRadius='4px';sig.style.fontSize='12px';sig.style.zIndex='10000';sig.style.fontWeight='600';document.body.appendChild(o);document.body.appendChild(sig);async%20function%20a(){try{let%20rows=[...document.querySelectorAll('tbody%20tr')].filter(tr=>{if(tr.querySelector('td%20span.label-success'))return%20false;if(tr.querySelector('a[onclick^="LoadAutoCad("]'))return%20false;return%20true});rows=rows.filter(tr=>{const%20sp=tr.querySelector('span.updstatus');return%20sp&&sp.getAttribute('data-row')});const%20total=rows.length;if(total===0){o.remove();sig.remove();alert('%D9%85%D8%AF%D8%B1%DA%A9%DB%8C%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D8%AA%D8%A7%DB%8C%DB%8C%D8%AF%20%DB%8C%D8%A7%D9%81%D8%AA%20%D9%86%D8%B4%D8%AF.');return}let%20done=0;for(const%20tr%20of%20rows){const%20sp=tr.querySelector('span.updstatus');const%20id=sp.getAttribute('data-row');const%20p=new%20URLSearchParams();p.append('action[0][action]','active');p.append('action[0][active]','1');p.append('id',id);try{const%20res=await%20fetch('/vbms/plugins/member/moteghazi_peivastlist.php',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;%20charset=UTF-8','X-Requested-With':'XMLHttpRequest'},body:p.toString(),credentials:'same-origin'});if(!res.ok){console.error('%D8%AE%D8%B7%D8%A7%20%D8%AF%D8%B1%20%D8%AA%D8%A7%DB%8C%DB%8C%D8%AF%20%D9%85%D8%AF%D8%B1%DA%A9:',id)}else{console.log('%D8%AA%D8%A7%DB%8C%DB%8C%D8%AF%20%D8%B4%D8%AF:',id)}}catch(e){console.error('%D8%AE%D8%B7%D8%A7%20%D8%AF%D8%B1%20%D8%AF%D8%B1%D8%AE%D9%88%D8%A7%D8%B3%D8%AA%20%D8%A8%D8%B1%D8%A7%DB%8C%20%D9%85%D8%AF%D8%B1%DA%A9:',id,e)}done++;const%20percent=Math.round((done/total)*100);progressBar.style.width=percent+'%';t.textContent=`%D9%84%D8%B7%D9%81%D8%A7%D9%8B%20%D8%B5%D8%A8%D8%B1%20%DA%A9%D9%86%DB%8C%D8%AF...%20${percent}%`;await%20d(50)}location.reload()}catch(err){console.error('%D8%AE%D8%B7%D8%A7%20%D8%AF%D8%B1%20%D8%A7%D8%AC%D8%B1%D8%A7%DB%8C%20%D8%A7%D8%B3%DA%A9%D8%B1%DB%8C%D9%BE%D8%AA:',err);o.remove();sig.remove()}}a();})();
+(function(){
+  const d = ms => new Promise(r => setTimeout(r, ms));
+  const o = document.createElement('div');
+  o.style.position = 'fixed';
+  o.style.top = '0';
+  o.style.left = '0';
+  o.style.width = '100%';
+  o.style.height = '100%';
+  o.style.backgroundColor = 'rgba(0,0,0,0.7)';
+  o.style.display = 'flex';
+  o.style.flexDirection = 'column';
+  o.style.justifyContent = 'center';
+  o.style.alignItems = 'center';
+  o.style.zIndex = '9999';
+  o.style.color = 'white';
+  o.style.fontSize = '22px';
+  o.style.backdropFilter = 'blur(3px)';
+  o.style.fontFamily = 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif';
+
+  const s = document.createElement('div');
+  s.style.border = '6px solid rgba(255,255,255,0.3)';
+  s.style.borderRadius = '50%';
+  s.style.borderTop = '6px solid #00ffcc';
+  s.style.width = '60px';
+  s.style.height = '60px';
+  s.style.animation = 'spin 1.2s linear infinite';
+  o.appendChild(s);
+
+  const st = document.createElement('style');
+  st.textContent = '@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}';
+  document.head.appendChild(st);
+
+  const t = document.createElement('div');
+  t.textContent = 'لطفاً صبر کنید...';
+  t.style.marginTop = '20px';
+  o.appendChild(t);
+
+  const progressContainer = document.createElement('div');
+  progressContainer.style.marginTop = '25px';
+  progressContainer.style.width = '300px';
+  progressContainer.style.height = '20px';
+  progressContainer.style.backgroundColor = 'rgba(255,255,255,0.2)';
+  progressContainer.style.borderRadius = '10px';
+  progressContainer.style.overflow = 'hidden';
+  progressContainer.style.boxShadow = '0 0 10px rgba(0,255,204,0.5) inset';
+
+  const progressBar = document.createElement('div');
+  progressBar.style.width = '0%';
+  progressBar.style.height = '100%';
+  progressBar.style.backgroundColor = '#00ffcc';
+  progressBar.style.borderRadius = '10px 0 0 10px';
+  progressBar.style.transition = 'width 0.3s ease';
+
+  progressContainer.appendChild(progressBar);
+  o.appendChild(progressContainer);
+
+  const sig = document.createElement('div');
+  sig.textContent = 'Create By AminRafiAkrami';
+  sig.style.position = 'fixed';
+  sig.style.bottom = '40px';
+  sig.style.left = '10px';
+  sig.style.color = 'black';
+  sig.style.backgroundColor = 'rgba(255,255,255,0.7)';
+  sig.style.padding = '3px 7px';
+  sig.style.borderRadius = '4px';
+  sig.style.fontSize = '12px';
+  sig.style.zIndex = '10000';
+  sig.style.fontWeight = '600';
+
+  document.body.appendChild(o);
+  document.body.appendChild(sig);
+
+  async function a() {
+    try {
+      let rows = [...document.querySelectorAll('tbody tr')].filter(tr => {
+        if (tr.querySelector('td span.label-success')) return false;
+        if (tr.querySelector('a[onclick^="LoadAutoCad("]')) return false;
+        return true;
+      });
+      rows = rows.filter(tr => {
+        const sp = tr.querySelector('span.updstatus');
+        return sp && sp.getAttribute('data-row');
+      });
+      const total = rows.length;
+      if (total === 0) {
+        o.remove();
+        sig.remove();
+        alert('مدرکی برای تایید یافت نشد.');
+        return;
+      }
+      let done = 0;
+      for (const tr of rows) {
+        const sp = tr.querySelector('span.updstatus');
+        const id = sp.getAttribute('data-row');
+        const p = new URLSearchParams();
+        p.append('action[0][action]', 'active');
+        p.append('action[0][active]', '1');
+        p.append('id', id);
+        try {
+          const res = await fetch('/vbms/plugins/member/moteghazi_peivastlist.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: p.toString(),
+            credentials: 'same-origin'
+          });
+          if (!res.ok) {
+            console.error('خطا در تایید مدرک:', id);
+          } else {
+            console.log('تایید شد:', id);
+          }
+        } catch (e) {
+          console.error('خطا در درخواست برای مدرک:', id, e);
+        }
+        done++;
+        const percent = Math.round((done / total) * 100);
+        progressBar.style.width = percent + '%';
+        t.textContent = `لطفاً صبر کنید... ${percent}%`;
+        await d(50);
+      }
+      location.reload();
+    } catch (err) {
+      console.error('خطا در اجرای اسکریپت:', err);
+      o.remove();
+      sig.remove();
+    }
+  }
+  a();
+})();
