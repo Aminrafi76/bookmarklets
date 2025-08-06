@@ -1,1 +1,192 @@
-javascript:(function(){function getRahgiriCode(){const spans=document.querySelectorAll("span");for(const span of spans){if(span.textContent.includes("کد رهگیری:")){const m=span.textContent.match(/کد رهگیری:\s*(\d+)/);if(m)return m[1];}}return null;}const rahgiri=getRahgiriCode();if(!rahgiri){alert("کد رهگیری پیدا نشد!");return;}const samts=[{name:"شمال",value:"eVFjR2szMVhGcDJMaS94M0g3SnJLQT09OjpNgB3sGd91YaVBC5BqMvPV"},{name:"شرق",value:"NGtyekgvdittR29tbFFIaERZc2Iydz09OjpzN3HgoA29pJY2EdjNoh2N"},{name:"جنوب",value:"Y2V4Wnp3RU1zOENyemxEL2dYeUt3Zz09OjpJvIRUHf2hmctBD5eXu$$JC"},{name:"غرب",value:"enlzN3pWMy9ab0kwdkZBR0NiNU50dz09OjrWA1yEUl8eU84Zmcb1Ymq1"}];const boundary="----geckoformboundary"+Math.random().toString(36).substr(2,16);const endpoint=`https://svs.bonyadmaskan.ir/vbms/plugins/member/member_zamindet.php?rahgiri=${rahgiri}&mode=edit&delete=1`;function buildFormData(samtVal,inputs){let data="";data+=`--${boundary}\r\nContent-Disposition: form-data; name="samt"\r\n\r\n${samtVal}\r\n`;data+=`--${boundary}\r\nContent-Disposition: form-data; name="metr"\r\n\r\n${inputs.metr}\r\n`;if(inputs.harimm2&&inputs.harimm2.trim()!==""){data+=`--${boundary}\r\nContent-Disposition: form-data; name="harim"\r\n\r\nMWpnNDlpSHdNVmVxQjJYdHl2ZmNPdz09OjoGR7Zkjajg2CYJfP1Qxp6B\r\n`;}data+=`--${boundary}\r\nContent-Disposition: form-data; name="harimm2"\r\n\r\n${inputs.harimm2}\r\n`;["metredit","tozihat","harimm1","KT_Insert1"].forEach(name=>{data+=`--${boundary}\r\nContent-Disposition: form-data; name="${name}"\r\n\r\n\r\n`;});data+=`--${boundary}--\r\n`;return data;}async function sendForm(samtVal,inputs){const body=buildFormData(samtVal,inputs);return fetch(endpoint,{method:"POST",credentials:"include",headers:{"Content-Type":"multipart/form-data; boundary="+boundary},body,});}const overlay=document.createElement("div");overlay.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:9999;font-family:Tahoma;";const container=document.createElement("div");container.style.cssText="background:#fff;padding:25px;border-radius:8px;box-shadow:0 5px 15px rgba(0,0,0,0.3);width:350px;max-width:90%;";const style=document.createElement("style");style.textContent=`label { display:block; margin-top:10px; font-weight:bold; color:#333; } input { width:100%; padding:8px; margin-top:5px; border:1px solid #ccc; border-radius:4px; box-sizing:border-box; } .btns { display:flex; justify-content:space-between; margin-top:20px; } button { padding:10px 15px; border:none; border-radius:4px; cursor:pointer; font-size:14px; } .submit-btn { background:#4CAF50; color:white; } .cancel-btn { background:#f44336; color:white; }`;document.head.appendChild(style);let current=0;const results=[];function nextStep(index){if(index>=samts.length){submitAll();return;}container.innerHTML="";const samt=samts[index];const title=document.createElement("h3");title.textContent=`جهت ${samt.name}`;title.style.textAlign="center";container.appendChild(title);const metrLabel=document.createElement("label");metrLabel.textContent=`مقدار ${samt.name} (متر):`;const metrInput=document.createElement("input");metrInput.placeholder="مثلاً 10 یا 5+3";container.appendChild(metrLabel);container.appendChild(metrInput);const harimLabel=document.createElement("label");harimLabel.textContent="عرض مصوب معبر (اختیاری):";const harimInput=document.createElement("input");harimInput.placeholder="مثلاً 5.5";container.appendChild(harimLabel);container.appendChild(harimInput);const btnDiv=document.createElement("div");btnDiv.className="btns";const cancelBtn=document.createElement("button");cancelBtn.className="cancel-btn";cancelBtn.textContent="انصراف";cancelBtn.onclick=()=>overlay.remove();const nextBtn=document.createElement("button");nextBtn.className="submit-btn";nextBtn.textContent=index<samts.length-1?"بعدی":"اتمام";function processNext(){const metrVal=metrInput.value.trim();const harimVal=harimInput.value.trim();if(!metrVal){alert("لطفاً مقدار متر را وارد کنید");metrInput.focus();return;}let finalMetr;if(metrVal.includes("+")){const parts=metrVal.split("+").map(p=>parseFloat(p.trim()));if(parts.some(isNaN)){alert("عدد نامعتبر در متر");metrInput.focus();return;}finalMetr=parts.reduce((a,b)=>a+b,0);}else{finalMetr=parseFloat(metrVal);if(isNaN(finalMetr)){alert("عدد نامعتبر در متر");metrInput.focus();return;}}results.push({metr:finalMetr.toString(),harimm2:harimVal||""});nextStep(index+1);}nextBtn.onclick=processNext;metrInput.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();processNext();}});harimInput.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();processNext();}});btnDiv.appendChild(cancelBtn);btnDiv.appendChild(nextBtn);container.appendChild(btnDiv);overlay.appendChild(container);document.body.appendChild(overlay);metrInput.focus();}async function submitAll(){overlay.innerHTML="<div style='color:#fff;text-align:center;font-size:18px'>در حال ارسال اطلاعات...</div>";for(let i=0;i<samts.length;i++){await sendForm(samts[i].value,results[i]);}location.reload();}nextStep(0);})();
+javascript:(function(){
+    // === گرفتن کد رهگیری ===
+    function getRahgiriCode(){
+        const spans=document.querySelectorAll("span");
+        for(const span of spans){
+            if(span.textContent.includes("کد رهگیری:")){
+                const m=span.textContent.match(/کد رهگیری:\s*(\d+)/);
+                if(m) return m[1];
+            }
+        }
+        return null;
+    }
+    const rahgiri=getRahgiriCode();
+    if(!rahgiri){
+        alert("کد رهگیری پیدا نشد!");
+        return;
+    }
+
+    // === پیدا کردن چهار جهت فقط شمال/شرق/جنوب/غرب ===
+    function findSamtsFromPage(){
+        const select = document.querySelector('select[name="samt"], select[id*="samt"]');
+        if(select){
+            const opts = Array.from(select.options);
+            return [
+                {name:"شمال", value:(opts.find(o=>/شمال/.test(o.textContent))||{value:""}).value},
+                {name:"شرق",  value:(opts.find(o=>/شرق/.test(o.textContent))||{value:""}).value},
+                {name:"جنوب", value:(opts.find(o=>/جنوب/.test(o.textContent))||{value:""}).value},
+                {name:"غرب",  value:(opts.find(o=>/غرب/.test(o.textContent))||{value:""}).value}
+            ];
+        }
+        const allOpts = Array.from(document.querySelectorAll('option'));
+        return [
+            {name:"شمال", value:(allOpts.find(o=>/شمال/.test(o.textContent))||{value:""}).value},
+            {name:"شرق",  value:(allOpts.find(o=>/شرق/.test(o.textContent))||{value:""}).value},
+            {name:"جنوب", value:(allOpts.find(o=>/جنوب/.test(o.textContent))||{value:""}).value},
+            {name:"غرب",  value:(allOpts.find(o=>/غرب/.test(o.textContent))||{value:""}).value}
+        ];
+    }
+    const samts = findSamtsFromPage();
+
+    // === پیدا کردن مقدار گزینه کوچه یا خیابان بدون تغییر در DOM ===
+    function findKucheOptionValue(){
+        const selects = Array.from(document.querySelectorAll('select'));
+        for(const s of selects){
+            const opt = Array.from(s.options).find(o=>/کوچه یا خیابان/.test(o.textContent));
+            if(opt) return opt.value;
+        }
+        return null;
+    }
+    const kucheOptionValue = findKucheOptionValue();
+
+    // === فرم‌دهی ===
+    const boundary="----geckoformboundary"+Math.random().toString(36).substr(2,16);
+    const endpoint=`https://svs.bonyadmaskan.ir/vbms/plugins/member/member_zamindet.php?rahgiri=${rahgiri}&mode=edit&delete=1`;
+
+    function buildFormData(samtVal, inputs){
+        let data="";
+        data+=`--${boundary}\r\nContent-Disposition: form-data; name="samt"\r\n\r\n${samtVal}\r\n`;
+        data+=`--${boundary}\r\nContent-Disposition: form-data; name="metr"\r\n\r\n${inputs.metr}\r\n`;
+
+        if(inputs.harimm2 && inputs.harimm2.trim() !== ""){
+            if(kucheOptionValue){
+                data+=`--${boundary}\r\nContent-Disposition: form-data; name="harim"\r\n\r\n${kucheOptionValue}\r\n`;
+            }
+            data+=`--${boundary}\r\nContent-Disposition: form-data; name="harimm2"\r\n\r\n${inputs.harimm2}\r\n`;
+        }
+
+        ["metredit","tozihat","harimm1","KT_Insert1"].forEach(name=>{
+            data+=`--${boundary}\r\nContent-Disposition: form-data; name="${name}"\r\n\r\n\r\n`;
+        });
+        data+=`--${boundary}--\r\n`;
+        return data;
+    }
+
+    async function sendForm(samtVal, inputs){
+        const body = buildFormData(samtVal, inputs);
+        return fetch(endpoint, {
+            method:"POST",
+            credentials:"include",
+            headers:{"Content-Type":"multipart/form-data; boundary=" + boundary},
+            body
+        });
+    }
+
+    // === رابط کاربری ===
+    const overlay=document.createElement("div");
+    overlay.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:9999;font-family:Tahoma;";
+    const container=document.createElement("div");
+    container.style.cssText="background:#fff;padding:25px;border-radius:8px;box-shadow:0 5px 15px rgba(0,0,0,0.3);width:350px;max-width:90%;";
+    const style=document.createElement("style");
+    style.textContent=`
+        label{display:block;margin-top:10px;color:#333;font-weight:bold;}
+        input{width:100%;padding:8px;margin-top:5px;border:1px solid #ccc;border-radius:4px;box-sizing:border-box;}
+        .btns{display:flex;justify-content:space-between;align-items:center;margin-top:20px;}
+        button{padding:10px 15px;border:none;border-radius:4px;cursor:pointer;font-size:14px;}
+        .submit-btn{background:#4CAF50;color:white;}
+        .cancel-btn{background:#f44336;color:white;}
+        .credit-label{font-size:12px;font-weight:normal;animation:colorChange 2s infinite;}
+        @keyframes colorChange {
+            0% { color: rgb(255,0,0); }
+            25% { color: rgb(0,255,0); }
+            50% { color: rgb(0,0,255); }
+            75% { color: rgb(255,255,0); }
+            100% { color: rgb(255,0,255); }
+        }
+    `;
+    document.head.appendChild(style);
+
+    let results=[];
+    function nextStep(i){
+        if(i>=samts.length){
+            submitAll();
+            return;
+        }
+        container.innerHTML="";
+        const s=samts[i];
+        const title=document.createElement("h3");
+        title.textContent=`جهت ${s.name}`;
+        title.style.textAlign="center";
+        container.appendChild(title);
+
+        const metrLabel=document.createElement("label");
+        metrLabel.textContent=`مقدار ${s.name} (متر):`;
+        const metrInput=document.createElement("input");
+        metrInput.placeholder="مثلاً 10 یا 5+3";
+        container.appendChild(metrLabel);
+        container.appendChild(metrInput);
+
+        const harimLabel=document.createElement("label");
+        harimLabel.textContent="عرض مصوب معبر (اختیاری):";
+        const harimInput=document.createElement("input");
+        harimInput.placeholder="مثلاً 5.5";
+        container.appendChild(harimLabel);
+        container.appendChild(harimInput);
+
+        const btnDiv=document.createElement("div");
+        btnDiv.className="btns";
+
+        const cancelBtn=document.createElement("button");
+        cancelBtn.className="cancel-btn";
+        cancelBtn.textContent="انصراف";
+        cancelBtn.onclick=()=>overlay.remove();
+
+        const credit=document.createElement("span");
+        credit.className="credit-label";
+        credit.textContent="Create By AminRafiAkrami";
+
+        const nextBtn=document.createElement("button");
+        nextBtn.className="submit-btn";
+        nextBtn.textContent=i<samts.length-1?"بعدی":"اتمام";
+
+        function goNext(){
+            const metrVal=metrInput.value.trim();
+            const harimVal=harimInput.value.trim();
+            if(!metrVal){alert("مقدار متر را وارد کنید");return;}
+            let finalMetr;
+            if(metrVal.includes("+")){
+                const p=metrVal.split("+").map(x=>parseFloat(x.trim()));
+                if(p.some(isNaN)){alert("عدد نامعتبر");return;}
+                finalMetr=p.reduce((a,b)=>a+b,0);
+            }else{
+                finalMetr=parseFloat(metrVal);
+                if(isNaN(finalMetr)){alert("عدد نامعتبر");return;}
+            }
+            results.push({metr:finalMetr.toString(), harimm2:harimVal||""});
+            nextStep(i+1);
+        }
+        nextBtn.onclick=goNext;
+        metrInput.addEventListener("keydown",e=>{if(e.key==="Enter")goNext();});
+        harimInput.addEventListener("keydown",e=>{if(e.key==="Enter")goNext();});
+
+        btnDiv.appendChild(cancelBtn);
+        btnDiv.appendChild(credit);
+        btnDiv.appendChild(nextBtn);
+        container.appendChild(btnDiv);
+        overlay.appendChild(container);
+        document.body.appendChild(overlay);
+        metrInput.focus();
+    }
+
+    async function submitAll(){
+        overlay.innerHTML="<div style='color:#fff;text-align:center;font-size:18px'>در حال ارسال...</div>";
+        for(let i=0;i<samts.length;i++){
+            if(samts[i].value){
+                await sendForm(samts[i].value, results[i]);
+            }
+        }
+        location.reload();
+    }
+
+    nextStep(0);
+})();
