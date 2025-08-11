@@ -1,5 +1,21 @@
-(function(){
+javascript:(function(){
   const d = ms => new Promise(r => setTimeout(r, ms));
+
+  // --- پیدا کردن نام از کد صفحه ---
+  let fullName = '';
+  try {
+    // جستجو در کل کد HTML برای name: '...'
+    const match = document.documentElement.innerHTML.match(/name:\s*'([^']+)'/);
+    if (match && match[1]) {
+      fullName = match[1].trim();
+    }
+  } catch(e) {
+    console.error("خطا در گرفتن نام:", e);
+  }
+
+  // گرفتن اسم کوچک (اولین کلمه)
+  let firstName = fullName ? fullName.split(' ')[0] : 'کاربر';
+
   const o = document.createElement('div');
   o.style.position = 'fixed';
   o.style.top = '0';
@@ -31,7 +47,7 @@
   document.head.appendChild(st);
 
   const t = document.createElement('div');
-  t.textContent = 'لطفاً صبر کنید...';
+  t.textContent = `${firstName} عزیز، لطفاً صبر کنید...`;
   t.style.marginTop = '20px';
   o.appendChild(t);
 
@@ -117,7 +133,7 @@
         done++;
         const percent = Math.round((done / total) * 100);
         progressBar.style.width = percent + '%';
-        t.textContent = `لطفاً صبر کنید... ${percent}%`;
+        t.textContent = `${firstName} عزیز، لطفاً صبر کنید... ${percent}%`;
         await d(50);
       }
       location.reload();
