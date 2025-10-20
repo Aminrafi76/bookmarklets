@@ -130,7 +130,7 @@ javascript:(function(){
   document.body.appendChild(o);
 
   // --- برگ‌ریزان پاییزی (جلوتر از همه)
-  const leafEmojis = ['🍁','🍂','🍃','🌰'];
+  const leafEmojis = ['🍁','🍂','🍁','🌰'];
   function createLeaf(){
     const leaf = document.createElement('div');
     leaf.classList.add('leaf');
