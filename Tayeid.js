@@ -5,13 +5,11 @@ javascript:(function(){
   let fullName = '';
   try {
     const match = document.documentElement.innerHTML.match(/name:\s*'([^']+)'/);
-    if (match && match[1]) {
-      fullName = match[1].trim();
-    }
+    if (match && match[1]) fullName = match[1].trim();
   } catch(e) { console.error("خطا در گرفتن نام:", e); }
   let firstName = fullName ? fullName.split(' ')[0] : 'کاربر';
 
-  // --- استایل کلی
+  // --- استایل کلی + تم پاییزی
   const st = document.createElement('style');
   st.textContent = `
     @keyframes spinPulse {
@@ -26,11 +24,11 @@ javascript:(function(){
     .typing {
       overflow: hidden;
       white-space: nowrap;
-      border-right: 3px solid #00ffcc;
+      border-right: 3px solid #ffb347;
       animation: typing 3s steps(30,end) infinite alternate;
     }
     .progress-glow {
-      background: linear-gradient(90deg, #00ffcc, #ff00cc, #00aaff);
+      background: linear-gradient(90deg, #ff7b00, #ffb347, #ffcc33);
       background-size: 300% 300%;
       animation: moveGlow 4s infinite linear;
     }
@@ -38,6 +36,23 @@ javascript:(function(){
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
+    }
+
+    /* برگ‌ریزان پاییزی */
+    .leaf {
+      position: fixed;
+      top: -10%;
+      pointer-events: none;
+      font-size: 20px;
+      opacity: 0.95;
+      color: #ff9933;
+      animation: fall linear forwards;
+      z-index: 10000 !important; /* جلوی همه‌چیز */
+      text-shadow: 0 0 5px rgba(255,180,80,0.8);
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
     }
   `;
   document.head.appendChild(st);
@@ -49,35 +64,36 @@ javascript:(function(){
   o.style.left = '0';
   o.style.width = '100%';
   o.style.height = '100%';
-  o.style.backgroundColor = 'rgba(0,0,0,0.8)';
+  o.style.background = 'linear-gradient(to bottom, rgba(50,20,0,0.8), rgba(0,0,0,0.85))';
   o.style.display = 'flex';
   o.style.flexDirection = 'column';
   o.style.justifyContent = 'center';
   o.style.alignItems = 'center';
-  o.style.zIndex = '9999';
+  o.style.zIndex = '9998';
   o.style.color = 'white';
   o.style.fontSize = '22px';
   o.style.backdropFilter = 'blur(5px)';
   o.style.fontFamily = 'Segoe UI, Tahoma, Geneva, Verdana, sans-serif';
+  o.style.overflow = 'hidden';
 
-  // --- لودینگ سه بعدی Glow
+  // --- لودینگ Glow
   const s = document.createElement('div');
   s.style.border = '6px solid rgba(255,255,255,0.2)';
-  s.style.borderTop = '6px solid #00ffcc';
+  s.style.borderTop = '6px solid #ffb347';
   s.style.borderRadius = '50%';
   s.style.width = '70px';
   s.style.height = '70px';
   s.style.animation = 'spinPulse 1.5s linear infinite';
-  s.style.boxShadow = '0 0 25px #00ffcc, 0 0 50px #00ffcc';
+  s.style.boxShadow = '0 0 25px #ff7b00, 0 0 50px #ffcc33';
   o.appendChild(s);
 
-  // --- متن با افکت تایپینگ
+  // --- متن تایپینگ
   const t = document.createElement('div');
   t.innerHTML = `<span class="typing">${firstName} عزیز، لطفاً صبر کنید...</span>`;
   t.style.marginTop = '25px';
   t.style.fontSize = '20px';
   t.style.fontWeight = '600';
-  t.style.textShadow = '0 0 10px #00ffcc';
+  t.style.textShadow = '0 0 10px #ffb347';
   o.appendChild(t);
 
   // --- Progress Bar نئونی
@@ -88,7 +104,7 @@ javascript:(function(){
   progressContainer.style.backgroundColor = 'rgba(255,255,255,0.15)';
   progressContainer.style.borderRadius = '15px';
   progressContainer.style.overflow = 'hidden';
-  progressContainer.style.boxShadow = '0 0 15px rgba(0,255,204,0.7) inset';
+  progressContainer.style.boxShadow = '0 0 15px rgba(255,150,0,0.7) inset';
 
   const progressBar = document.createElement('div');
   progressBar.style.width = '0%';
@@ -101,17 +117,32 @@ javascript:(function(){
 
   // --- امضا
   const sig = document.createElement('div');
-  sig.textContent = '⚡ Powered By AminRafiAkrami';
+  sig.textContent = '🍂 Powered By AminRafiAkrami 🍁';
   sig.style.position = 'fixed';
   sig.style.bottom = '30px';
   sig.style.left = '20px';
-  sig.style.color = '#fff';
-  sig.style.textShadow = '0 0 10px #00ffcc, 0 0 20px #ff00cc';
+  sig.style.color = '#ffcc66';
+  sig.style.textShadow = '0 0 10px #ff7b00, 0 0 20px #ffb347';
   sig.style.fontSize = '14px';
   sig.style.fontWeight = 'bold';
   o.appendChild(sig);
 
   document.body.appendChild(o);
+
+  // --- برگ‌ریزان پاییزی (جلوتر از همه)
+  const leafEmojis = ['🍁','🍂','🍃','🌰'];
+  function createLeaf(){
+    const leaf = document.createElement('div');
+    leaf.classList.add('leaf');
+    leaf.textContent = leafEmojis[Math.floor(Math.random()*leafEmojis.length)];
+    leaf.style.left = Math.random()*100 + 'vw';
+    leaf.style.animationDuration = (5 + Math.random()*5) + 's';
+    leaf.style.fontSize = (16 + Math.random()*14) + 'px';
+    leaf.style.zIndex = '10001';
+    document.body.appendChild(leaf);
+    setTimeout(()=>leaf.remove(), 10000);
+  }
+  setInterval(createLeaf, 400);
 
   // --- اجرای اصلی
   async function a() {
